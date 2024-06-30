@@ -266,8 +266,8 @@ class vars_facs:
 
 				if self.vars_l[var_idx]['obs_flg']:
 					op_msg = self.vars_l[var_idx]['obs_val']
-				elif self.vars_l[var_idx]['unsure_flg']:
-					op_msg = self.vars_l[var_idx]['unsure_val']
+				# elif self.vars_l[var_idx]['unsure_flg']:
+				# 	op_msg = self.vars_l[var_idx]['unsure_val']
 				else:
 					if len(w_o_fac_idxs):
 						op_msg = np.ones(self.n_poss_vals)
@@ -288,7 +288,7 @@ class vars_facs:
 																			   o_fac_idx,
 																			   list(op_msg)))
 		if self.dbg_op_flg:
-			input('Waiting...')
+			print('Waiting...')
 
 	def facs_to_vars(self,):
 		"""
@@ -365,13 +365,13 @@ class vars_facs:
 		all_vars_gt_stp_val = True
 		vars_vals = []
 		# NS abt this
-		unsure_vars_idxs = []
+		# unsure_vars_idxs = []
 		#
 		if self.dbg_op_flg:
 			print('iter_idx: ', iter_idx)
 		for var_idx in range(self.n_vars):
 			# NS abt this
-			self.vars_l[var_idx]['unsure_flg'] = False
+			# self.vars_l[var_idx]['unsure_flg'] = False
 			#
 			if self.vars_l[var_idx]['obs_flg']:
 				op_val = self.vars_l[var_idx]['obs_val']
@@ -389,24 +389,25 @@ class vars_facs:
 					if op_val[m_idx] > max_val:
 						max_idx = m_idx
 						max_val = op_val[max_idx]
-				max_idxs = [max_idx]
-				for val_idx in range(self.n_poss_vals):
-					if val_idx == max_idx:
-						continue
-					elif max_val - op_val[val_idx] < self.max_eps:
-						max_idxs.append(val_idx)
+				# max_idxs = [max_idx]
+				# for val_idx in range(self.n_poss_vals):
+				# 	if val_idx == max_idx:
+				# 		continue
+				# 	elif max_val - op_val[val_idx] < self.max_eps:
+				# 		max_idxs.append(val_idx)
 
-				if len(max_idxs) == 1:
-					vars_vals.append(self.var_poss_vals[max_idxs[0]])
-				else:
-					# NS abt this
-					var_dict = {'var_idx': var_idx, 'max_idxs': max_idxs}
-					unsure_vars_idxs.append(var_dict)
-					if len(unsure_vars_idxs) == 1:
-						vars_vals.append(self.var_poss_vals[max_idxs[0]])
-					else:
-						vars_vals.append(None)
-					#
+				# if len(max_idxs) == 1:
+				# 	vars_vals.append(self.var_poss_vals[max_idxs[0]])
+				# else:
+				# 	# NS abt this
+				# 	var_dict = {'var_idx': var_idx, 'max_idxs': max_idxs}
+				# 	unsure_vars_idxs.append(var_dict)
+				# 	if len(unsure_vars_idxs) == 1:
+				# 		vars_vals.append(self.var_poss_vals[max_idxs[0]])
+				# 	else:
+				# 		vars_vals.append(None)
+				#
+				vars_vals.append(self.var_poss_vals[max_idx])
 				if np.max(op_val) <= self.stp_val:
 					all_vars_gt_stp_val = False
 			else:
@@ -416,21 +417,21 @@ class vars_facs:
 			if self.dbg_op_flg:
 				print('var_idx: {0}, var_val: {1}'.format(var_idx, vars_vals[var_idx]))
 				print('op_val: {0}'.format(op_val))
-		if self.dbg_op_flg:
-			print('unsure_vars_idxs: ', unsure_vars_idxs)
+		# if self.dbg_op_flg:
+		# 	print('unsure_vars_idxs: ', unsure_vars_idxs)
 		# NS abt this
-		if len(unsure_vars_idxs) > 1:
-			unsure_var_idx = unsure_vars_idxs[0]['var_idx']
-			unsure_msg = np.zeros(self.n_poss_vals)
-			unsure_msg[unsure_vars_idxs[0]['max_idxs'][0]] = 1
-			self.vars_l[unsure_var_idx]['unsure_flg'] = True
-			self.vars_l[unsure_var_idx]['unsure_val'] = \
-					unsure_msg
-			if self.dbg_op_flg:
-				print('unsure_var_idx: ', unsure_var_idx)
-				print('unsure_msg: ', list(unsure_msg))
+		# if len(unsure_vars_idxs) > 1:
+		# 	unsure_var_idx = unsure_vars_idxs[0]['var_idx']
+		# 	unsure_msg = np.zeros(self.n_poss_vals)
+		# 	unsure_msg[unsure_vars_idxs[0]['max_idxs'][0]] = 1
+		# 	self.vars_l[unsure_var_idx]['unsure_flg'] = True
+		# 	self.vars_l[unsure_var_idx]['unsure_val'] = \
+		# 			unsure_msg
+		# 	if self.dbg_op_flg:
+		# 		print('unsure_var_idx: ', unsure_var_idx)
+		# 		print('unsure_msg: ', list(unsure_msg))
 		if self.dbg_op_flg:
-			input('Waiting....')
+			print('Waiting....')
 		return all_vars_gt_stp_val, vars_vals
 
 	def run_iter(self, iter_idx=None):
@@ -455,6 +456,7 @@ class vars_facs:
 		"""
 		for idx in range(self.max_iters):
 			vars_vals = self.run_iter(idx)
+			print(vars_vals)
 			if self.all_vars_gt_stp_val:
 				break
 		return vars_vals

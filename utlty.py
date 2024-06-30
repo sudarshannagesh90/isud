@@ -117,6 +117,17 @@ def unq_elems(l_elems):
 	else:
 		return 0
 
+@registry
+def single_zero(l_elems):
+	n_zeros = 0
+	for elem in l_elems:
+		if elem == 0:
+			n_zeros += 1
+	if n_zeros == 1:
+		return 1
+	else:
+		return 0
+
 def inc_l_idxs(l_idxs, poss_vals):
 	len_l_idxs = len(l_idxs)
 	for idx in range(len_l_idxs - 1, -1, -1):
@@ -159,7 +170,7 @@ def gen_sud_var_fac_lnks(N):
 						 np.mod(v_idx, N) + N])
 	return l_l_idxs
 
-def get_obs_var(A):
+def get_obs_var(A, zero_one_sud=False):
 	# Input:
 	# A: sud_mat
 	# Let vars be arrang. as 
@@ -171,9 +182,12 @@ def get_obs_var(A):
 	for r_idx in range(n_r):
 		for c_idx in range(n_c):
 			if A[r_idx, c_idx] != 0:
-				obs_val = np.zeros(n_r)
-				obs_val[int(A[r_idx, c_idx]) - 1] = 1
-				var_obs.append(obs_val)
+				if zero_one_sud:
+					var_obs.append(np.asarray([0, 1]))
+				else:
+					obs_val = np.zeros(n_r)
+					obs_val[int(A[r_idx, c_idx]) - 1] = 1
+					var_obs.append(obs_val)
 			else:
 				var_obs.append(None) 
 	return var_obs
